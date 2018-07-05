@@ -8,7 +8,6 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-import store from './store/store';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -18,6 +17,5 @@ import store from './store/store';
 Vue.component('todo-component', require('./components/Todo.vue'));
 
 const app = new Vue({
-    el: '#app',
-    store
+    el: '#app'
 });
