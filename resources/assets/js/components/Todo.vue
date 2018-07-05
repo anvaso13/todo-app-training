@@ -1,29 +1,17 @@
 <template>
     <div class="container">
-        <form v-on:submit.prevent="addTodo()">
-            <div class="box">
-                <div class="field is-grouped">
-                    <p class="control is-expanded">
-                        <input class="input" type="text" placeholder="Nuevo recordatorio" v-model="todoItemText">
-                    </p>
-                    <p class="control">
-                        <a class="button is-info" @click.prevent="addTodo">
-                            Agregar
-                        </a>
-                    </p>
-                </div>
-             </div>
-        </form>
+        <todo-input v-bind:todoItemText="todoItemText" v-on:addTodo="addTodo"
+         v-on:textChanged="todoItemText = $event"></todo-input>
         <table class="table is-bordered">
-            <tr v-for="(todo, index) in items" :key="index">
-                <td class="is-fullwidth" style="cursor: pointer" :class="{ 'is-done': todo.done }"
-                 @click="toggleDone(todo)">
-                    {{ todo.text }}
-                </td>
-                <td class="is-narrow">
-                    <a class="button is-danger is-small" @click="removeTodo(todo)">Eliminar</a>
-                </td>
-            </tr>
+            <todo-item
+                v-for="(todo, index) in items"
+                v-bind:key="index"
+                v-bind:id="todo.id"
+                v-bind:text="todo.text"
+                v-bind:done="todo.done"
+                v-on:toggleDone="toggleDone(todo)"
+                v-on:removeTodo="removeTodo(todo)"
+            ></todo-item>
         </table>
     </div>
 </template>
@@ -36,7 +24,15 @@
      * - En addTodo, removeTodo y toggleTodo deben hacer los cambios pertinentes para que las modificaciones,
      *   addiciones o elimicaiones tomen efecto en el backend asi como la base de datos.
      */
+
+    import todoItem from './TodoItem.vue';
+    import todoInput from './TodoInput.vue';
+
     export default {
+        components:{
+            'todo-input' : todoInput,
+            'todo-item' : todoItem
+        },
         data () {
             return {
                 todoItemText: '',
