@@ -10,8 +10,8 @@
                 v-bind:text="todo.text"
                 v-bind:done="todo.done"
                 v-on:toggleDone="toggleDone(todo)"
-                v-on:removeTodo="removeTodo(todo)"
-            ></todo-item>
+                v-on:removeTodo="removeTodo(todo)">
+            </todo-item>
         </table>
     </div>
 </template>
