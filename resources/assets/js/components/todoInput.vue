@@ -1,5 +1,4 @@
 <template>
-    <form v-on:submit.prevent="$emit('addTodo')">
     <div class="box">
         <div class="field is-grouped">
             <p class="control is-expanded">
@@ -14,21 +13,18 @@
             </p>
         </div>
     </div>
-    </form>
 </template>
 
 <script>
 export default {
-    props:['todoItemText'],
-    data () {
-        return {
-            inputText: ''
+    computed: {
+        todoItemText() {
+            return this.$store.getters.getTodoItemText;
         }
     },
     methods: {
         changeText(event){
-            this.inputText = event.target.value;
-            this.$emit('textChanged',this.inputText);
+            this.$store.commit('changeText', event);
         }
     }
 }
