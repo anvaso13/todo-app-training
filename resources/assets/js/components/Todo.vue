@@ -1,7 +1,6 @@
 <template>
     <div class="container">
-        <todo-input v-bind:todoItemText="todoItemText" v-on:addTodo="addTodo"
-         v-on:textChanged="todoItemText = $event"></todo-input>
+        <todo-input v-on:addTodo="addTodo()"></todo-input>
         <table class="table is-bordered">
             <todo-item
                 v-for="(todo, index) in items"
@@ -9,8 +8,8 @@
                 v-bind:id="todo.id"
                 v-bind:text="todo.text"
                 v-bind:done="todo.done"
-                v-on:toggleDone="toggleDone(todo)"
-                v-on:removeTodo="removeTodo(todo)">
+                v-on:toggleDone="toggleDone(todo.id)"
+                v-on:removeTodo="removeTodo(todo.id)">
             </todo-item>
         </table>
     </div>
@@ -33,47 +32,29 @@
             'todo-input' : todoInput,
             'todo-item' : todoItem
         },
-        data () {
-            return {
-                todoItemText: '',
-                items: [],
+        computed: {
+            items(){
+                return this.$store.getters.getItems;
             }
         },
         mounted () {
-            this.listTodos();
+            this.$store.commit('listTodos'); //reemplaza a this.listTodos();
         },
+
         methods: {
-            listTodos(){
-                axios.get('api/todos').then(response => {
-                    this.items = response.data
-                });
+            addTodo() {
+                this.$store.dispatch('addTodo');
             },
 
-            addTodo () {
-                let text = this.todoItemText.trim();
-                if (text !== '') {
-                    let todo = {text: text, done: 0};
-                    axios.post('api/todos', todo)
-                    .then(response => {
-                        this.items.push(response.data);
-                    })
-                    .catch(err => console.log(err));
-                    this.todoItemText = '';
-                }
+            removeTodo(id){
+                this.$store.dispatch('removeTodo', id);
             },
 
-            removeTodo (todo) {
-                 axios.delete(`api/todos/${todo.id}`).then(response => {
-                    this.items = this.items.filter(item => item !== todo);
-                }).catch(err => console.log(err));
-            },
-
-            toggleDone (todo) {
-                axios.put(`api/todos/${todo.id}`,todo).then(response =>{
-                    todo.done = !todo.done
-                }).catch(err => console.log(err));                
+            toggleDone(id){
+                this.$store.dispatch('toggleDone', id);
             }
         }
+        
     }
 </script>
 
